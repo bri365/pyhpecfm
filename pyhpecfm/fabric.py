@@ -54,7 +54,7 @@ def perform_fit(cfmclient, fabric_uuid, name, description):
         'description': '{}'.format(description)
             }
     path = 'fits'
-    return cfmclient.post(path, data)
+    return cfmclient.post(path, data=data)
 
 # section dealing with switches functions
 

@@ -97,17 +97,18 @@ class CFMClient(object):
         """
         return self._call_api(method='PATCH', path=path, data=data)
 
-    def post(self, path, data):
+    def post(self, path, params=None, data=None):
         """Execute an API POST request.
 
         Arguments:
             path (str): API request path
+            params (dict): url params to send
             data (dict): Data to send
 
         Returns:
             Response: The requests response object
         """
-        return self._call_api(method='POST', path=path, data=data)
+        return self._call_api(method='POST', path=path, params=params, data=data)
 
     def _call_api(self, method, path, params=None, data=None):
         """Execute an API request.

@@ -11,7 +11,7 @@ from nose.plugins.skip import SkipTest
 
 
 from pyhpecfm.fabric import *
-from pyhpecfm.auth import *
+from pyhpecfm.client import *
 import os
 
 cfm_ip = os.environ['CFM_IP']
