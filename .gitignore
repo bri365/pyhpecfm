@@ -48,3 +48,5 @@ coverage.xml
 .pytest_cache/
 
 test_pyhpecfm/secrets.py
+
+.idea

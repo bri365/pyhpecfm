@@ -6,7 +6,9 @@ desired HPE Composabale Fabric Manager instance
 """
 
 
-# section dealing with fabric functions
+####################
+# Fabric functions #
+####################
 
 def get_fabrics(cfmclient, fabric_uuid=None):
     """
@@ -40,7 +42,18 @@ def get_fabric_ip_networks(cfmclient, fabric_uuid=None):
     return cfmclient.get(path).json().get('result')
 
 
-# section dealing with fitting functions
+def create_fabric(cfmclient, data, fabric_type=None):
+    """
+    Create :A Composable Fabric.
+    """
+    path = 'fabrics'
+    params = {'type': fabric_type} if fabric_type else None
+    return cfmclient.post(path, params, data).json().get('result')
+
+
+#####################
+# Fitting functions #
+#####################
 
 def perform_fit(cfmclient, fabric_uuid, name, description):
     """
@@ -56,8 +69,10 @@ def perform_fit(cfmclient, fabric_uuid, name, description):
     path = 'fits'
     return cfmclient.post(path, data=data)
 
-# section dealing with switches functions
 
+######################
+# Switches functions #
+######################
 
 def get_switches(cfmclient, params=None):
     """
@@ -79,10 +94,18 @@ def get_switches(cfmclient, params=None):
     return cfmclient.get(path, params).json().get('result')
 
 
+def create_switch(cfmclient, data, fabric_type=None):
+    """
+    Create :A Composable Fabric switch.
+    """
+    path = 'switches'
+    params = {'type': fabric_type} if fabric_type else None
+    return cfmclient.post(path, params, data).json().get('result')
 
 
-
-# Section dealing with port functions
+##################
+# Port functions #
+##################
 
 def get_ports(cfmclient, switch_uuid=None):
     """
@@ -125,8 +148,9 @@ def update_ports(cfmclient, port_uuids, field, value):
         }]
         cfmclient.patch('ports', data)
 
-
-#section dealing with VLAN functions
+##################
+# VLAN functions #
+##################
 
 def get_vlan_groups(cfmclient, params=None):
     """
