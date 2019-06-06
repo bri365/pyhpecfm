@@ -49,7 +49,7 @@ class CFMClient(object):
         Explicitly expires token on CFM server instance"""
         self.disconnect()
 
-    def connect(self):
+    def connect(self, login=True):
         """Connect to CFM API and retrieve token."""
         self._session = None
         self._token = None
@@ -57,18 +57,20 @@ class CFMClient(object):
         self._session = requests.session()
         self._session.headers.update({'Accept': 'application/json; version=1.0'})
         self._session.headers.update({'Content-Type': 'application/json'})
-        self._session.headers.update({'X-Auth-Username': '{}'.format(self._username)})
-        self._session.headers.update({'X-Auth-Password': '{}'.format(self._password)})
 
-        response = self._call_api('POST', 'auth/token').json()
-        self._token = response.get('result')
-        if self._token:
-            self._session = requests.session()
-            self._session.headers.update({'Accept': 'application/json; version=1.0'})
-            self._session.headers.update({'Authorization': 'Bearer {}'.format(self._token)})
-            self._session.headers.update({'X-Auth-Refresh-Token': 'true'})
-        else:
-            print('Error getting authentication token')
+        if login:
+            self._session.headers.update({'X-Auth-Username': '{}'.format(self._username)})
+            self._session.headers.update({'X-Auth-Password': '{}'.format(self._password)})
+
+            response = self._call_api('POST', 'auth/token').json()
+            self._token = response.get('result')
+            if self._token:
+                self._session = requests.session()
+                self._session.headers.update({'Accept': 'application/json; version=1.0'})
+                self._session.headers.update({'Authorization': 'Bearer {}'.format(self._token)})
+                self._session.headers.update({'X-Auth-Refresh-Token': 'true'})
+            else:
+                print('Error getting authentication token')
 
     def disconnect(self):
         """Disconnect from CFM API and delete token."""
