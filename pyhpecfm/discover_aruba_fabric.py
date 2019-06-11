@@ -25,7 +25,7 @@ for f in fabrics:
 
 if not fabric_uuid:
     aruba_fabric = {
-        'host': '192.168.1.241',
+        'host': '10.10.8.31',
         'name': 'Aruba',
         'description': 'Aruba demo fabric',
         'username': aruba_username,
@@ -38,7 +38,7 @@ print('Fabric UUID {}'.format(fabric_uuid))
 
 switches = fabric.get_switches(cfm)
 switch_ips = [sw['ip_address'] for sw in switches]
-for ip in ['192.168.1.242', '192.168.1.243', '192.168.1.244', '192.168.1.245', '192.168.1.246']:
+for ip in ['10.10.8.32', '10.10.8.33', '10.10.8.34']:
     if ip not in switch_ips:
         aruba_switch = {
             'host': ip,
