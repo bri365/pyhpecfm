@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-This module is used for testing.
+Discover demo Aruba switches.
 """
 
 import client

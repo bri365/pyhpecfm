@@ -182,3 +182,45 @@ def get_vlan_properties(cfmclient, fabric_uuid):
     """
     path='vlan_properties/{}'.format(fabric_uuid)
     return cfmclient.get(path).json().get('result')
+
+####################
+# VPC functions #
+####################
+
+def get_vpcs(cfmclient, uuid=None):
+    """
+    Get :List of VPCs currently defined in Composable Fabric.
+
+    :param cfmclient: Connected CFM API client
+    :param uuid: specific VPC UUID to retrieve
+    :return: list of VPC dictionary objects
+    :rtype: list
+    """
+    path = 'vpcs'
+    if uuid:
+        path += '/{}'.format(uuid)
+    return cfmclient.get(path).json().get('result')
+
+def get_bgp(cfmclient, uuid):
+    """
+    Get VPC BGP configuration.
+
+    :param cfmclient: Connected CFM API client
+    :param uuid: VPC UUID from which to retrieve BGP info
+    :return: BGP dictionary object
+    :rtype: list
+    """
+    path = 'vpcs/{}/bgp'.format(uuid)
+    return cfmclient.get(path).json().get('result')
+
+def get_bgp_leaf_spine(cfmclient, uuid):
+    """
+    Get VPC BGP leaf and spine configuration.
+
+    :param cfmclient: Connected CFM API client
+    :param uuid: VPC UUID from which to retrieve BGP info
+    :return: BGP dictionary object
+    :rtype: list
+    """
+    path = 'vpcs/{}/bgp/leaf_spine'.format(uuid)
+    return cfmclient.get(path).json().get('result')
