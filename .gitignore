@@ -50,3 +50,4 @@ coverage.xml
 test_pyhpecfm/secrets.py
 
 .idea
+.vscode

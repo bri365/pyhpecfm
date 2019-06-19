@@ -1,18 +1,17 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-This module provides helped functions and holds the main auth object used for authenticating
-against the desired HPE Composable Fabric Manager instance.
+This module provides helper functions and holds the main client object
+for authenticating with an HPE Composable Fabric Manager.
 """
 
 from requests.models import PreparedRequest
 import requests
 
-# the following removes the warnings for self-signed certificates
+# The following lines remove warnings for self-signed certificates
 # noinspection PyUnresolvedReferences
 from requests.packages.urllib3.exceptions import \
     InsecureRequestWarning  # pylint: disable=import-error
-
 # noinspection PyUnresolvedReferences
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)  # pylint: disable=no-member
 
@@ -23,7 +22,7 @@ class CFMApiError(Exception):
 
 
 class CFMClient(object):
-    """Bindings for the CFM REST API."""
+    """Client class for the CFM REST API bindings."""
 
     def __init__(self, host, username, password, verify_ssl=False, timeout=30):
         """
@@ -31,10 +30,8 @@ class CFMClient(object):
         :param host: str FQDN or IPv4 Address of the target CFM host
         :param username: str valid username with sufficient permissions on the CFM host
         :param password: str valid password for username var
-        :param verify_ssl: bool verifies SSL certificate when communicating over HTTPS. Default
-        value of False
-        :param timeout: int defines the timeout value for when a API call will be marked as
-        unresponsive
+        :param verify_ssl: bool verify SSL certificate. Default value is False
+        :param timeout: int timeout in seconds for API calls
         """
         self._host = host
         self._username = username

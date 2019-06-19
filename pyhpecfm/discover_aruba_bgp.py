@@ -42,7 +42,7 @@ leaf_spine_config = {
     'prefix_length': 24,
     'address': '172.10.10.0'
   },
-  'enable': true,
+  'enable': True,
   'name': 'My BGP configuration',
   'holddown_timer': 90,
   'keepalive_timer': 30,
@@ -52,4 +52,3 @@ leaf_spine_config = {
   ],
   'description': 'CFM created BGP configuration'
 }
-
