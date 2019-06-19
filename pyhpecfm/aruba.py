@@ -16,7 +16,7 @@ def get_firmware(cfmclient, ):
     :return: list of dicts
     """
     path = 'v1/aruba/action'
-    data = {'action': 'get_firmware', 'params': {'switch': '192.168.1.241'}}
+    data = {'action': 'get_firmware', 'params': {'switch': '192.168.249.81'}}
     return cfmclient.post(path, data=data).json().get('result')
 
 

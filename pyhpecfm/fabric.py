@@ -70,9 +70,9 @@ def perform_fit(cfmclient, fabric_uuid, name, description):
     return cfmclient.post(path, data=data)
 
 
-######################
-# Switches functions #
-######################
+####################
+# Switch functions #
+####################
 
 def get_switches(cfmclient, params=None):
     """
@@ -224,3 +224,16 @@ def get_bgp_leaf_spine(cfmclient, uuid):
     """
     path = 'vpcs/{}/bgp/leaf_spine'.format(uuid)
     return cfmclient.get(path).json().get('result')
+
+def update_bgp_leaf_spine(cfmclient, uuid, config):
+    """
+    Update VPC BGP leaf and spine configuration.
+
+    :param cfmclient: Connected CFM API client
+    :param uuid: VPC UUID from which to retrieve BGP info
+    :param config: BGP leaf spine configuration data
+    :return: BGP dictionary object
+    :rtype: list
+    """
+    path = 'vpcs/{}/bgp/leaf_spine'.format(uuid)
+    return cfmclient.put(path, config).json().get('result')

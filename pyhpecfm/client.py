@@ -112,6 +112,18 @@ class CFMClient(object):
         """
         return self._call_api(method='POST', path=path, params=params, data=data)
 
+    def put(self, path, data):
+        """Execute an API PUT request.
+
+        Arguments:
+            path (str): API request path
+            data (dict): Data to send
+
+        Returns:
+            Response: The requests response object
+        """
+        return self._call_api(method='PUT', path=path, data=data)
+
     def _call_api(self, method, path, params=None, data=None):
         """Execute an API request.
 
