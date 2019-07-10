@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
-This module provides helper functions and holds the main client object
-for authenticating with an HPE Composable Fabric Manager.
+This module implements the main client object for interacting with
+HPE Composable Fabric Manager, including authentication and REST methods.
 """
 import time
 
@@ -9,21 +9,19 @@ import requests
 
 # The following lines remove warnings for self-signed certificates
 # noinspection PyUnresolvedReferences
-from requests.packages.urllib3.exceptions import \
-    InsecureRequestWarning  # pylint: disable=import-error
+from requests.packages.urllib3.exceptions import InsecureRequestWarning  # pylint: disable=import-error
 # noinspection PyUnresolvedReferences
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)  # pylint: disable=no-member
 
 
 class CFMApiError(Exception):
-    """Composable Fabric Manager API exception."""
-    pass
+    """ Composable Fabric Manager API exception. """
 
 
-class CFMClient(object):
-    """Client class for the CFM REST API bindings."""
+class CFMClient():
+    """ Client class for CFM REST API bindings. """
 
-    def __init__(self, host, username, password, verify_ssl=False, timeout=30):
+    def __init__(self, host, username, password, verify_ssl=False):
         """
         Initialize API instance.
 
@@ -37,7 +35,7 @@ class CFMClient(object):
         self._username = username
         self._password = password
         self._verify_ssl = verify_ssl
-        self._timeout = timeout
+        self._timeout = 30
         self._session = None
         self._auth_token = None
         self._max_connection_retries = 3
@@ -71,13 +69,14 @@ class CFMClient(object):
             if self._auth_token:
                 self._session = requests.session()
                 self._session.headers.update({'Accept': 'application/json'})
-                self._session.headers.update({'Authorization': 'Bearer {}'.format(self._auth_token)})
+                self._session.headers.update(
+                    {'Authorization': 'Bearer {}'.format(self._auth_token)})
                 self._session.headers.update({'X-Auth-Refresh-Token': 'true'})
             else:
                 raise CFMApiError('Error retrieving authentication token')
 
     def disconnect(self):
-        """Disconnect from CFM API session and delete token."""
+        """ Disconnect from CFM API session and delete token. """
         self._auth_token = None
         self._session = None
 
@@ -136,7 +135,8 @@ class CFMClient(object):
 
     def _call_api(self, method, path, params=None, headers=None, json=None,
                   timeout=None, stream=False):
-        """Execute a CFM REST API request.
+        """
+        Execute a CFM REST API request.
 
         Arguments:
             method (str): HTTP request type
@@ -217,7 +217,8 @@ class CFMClient(object):
 
     def _process_request(self, session, method, path, params, headers, json, timeout=None,
                          verify=False, cert=None, stream=False):
-        """Execute a REST API request using the supplied session.
+        """
+        Execute a REST API request using the supplied session.
 
         Arguments:
             session (requests.Session): The session to use to issue the HTTP request.
@@ -253,14 +254,13 @@ class CFMClient(object):
             response = session.request(**request)
         except requests.exceptions.SSLError as exception:
             print('%s %s failed due to SSL handshake error; ensure %s contains a '
-                               'certificate which can be used to validate HTTPS connections to %s',
-                               method, path, verify, self._host)
+                  'certificate which can be used to validate HTTPS connections to %s',
+                  method, path, verify, self._host)
             raise exception
 
         try:
             response.raise_for_status()
             return response
         except Exception as exception:
-            print('%s %s failed with status %s',
-                  method, path, response.status_code)
+            print('%s %s failed with status %s', method, path, response.status_code)
             raise exception
