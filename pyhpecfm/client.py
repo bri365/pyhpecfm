@@ -21,7 +21,7 @@ class CFMApiError(Exception):
 class CFMClient():
     """ Client class for CFM REST API bindings. """
 
-    def __init__(self, host, username, password, verify_ssl=False):
+    def __init__(self, host, username, password, verify_ssl=False, timeout=30):
         """
         Initialize API instance.
 
@@ -35,7 +35,7 @@ class CFMClient():
         self._username = username
         self._password = password
         self._verify_ssl = verify_ssl
-        self._timeout = 30
+        self._timeout = timeout
         self._session = None
         self._auth_token = None
         self._max_connection_retries = 3
@@ -61,26 +61,37 @@ class CFMClient():
         self._session.headers.update({'Content-Type': 'application/json'})
 
         if login:
-            self._session.headers.update({'X-Auth-Username': '{}'.format(self._username)})
-            self._session.headers.update({'X-Auth-Password': '{}'.format(self._password)})
-
-            response = self._call_api('POST', 'v1/auth/token').json()
-            self._auth_token = response.get('result')
-            if self._auth_token:
-                self._session = requests.session()
-                self._session.headers.update({'Accept': 'application/json'})
-                self._session.headers.update(
-                    {'Authorization': 'Bearer {}'.format(self._auth_token)})
-                self._session.headers.update({'X-Auth-Refresh-Token': 'true'})
-            else:
-                raise CFMApiError('Error retrieving authentication token')
+            self.login()
 
     def disconnect(self):
         """ Disconnect from CFM API session and delete token. """
         self._auth_token = None
         self._session = None
 
-    def delete(self, path, params= None):
+    def login(self):
+        """ Login to CFM API and get user token. """
+        self._session.headers.update({'X-Auth-Username': '{}'.format(self._username)})
+        self._session.headers.update({'X-Auth-Password': '{}'.format(self._password)})
+
+        response = self._call_api('POST', 'v1/auth/token').json()
+        self._auth_token = response.get('result')
+        if self._auth_token:
+            self._session = requests.session()
+            self._session.headers.update({'Accept': 'application/json'})
+            self._session.headers.update(
+                {'Authorization': 'Bearer {}'.format(self._auth_token)})
+            self._session.headers.update({'X-Auth-Refresh-Token': 'true'})
+        else:
+            raise CFMApiError('Error retrieving authentication token')
+
+    def logout(self):
+        """ Logout from CFM API by deleting our user token. """
+        response = self.delete('v1/auth/token').json()
+        if response:
+            print('what the hell?', response)
+        self._auth_token = None
+
+    def delete(self, path, params=None):
         """
         Helper function for HTTP DELETE commands
 
@@ -88,9 +99,9 @@ class CFMClient():
         :return: requests.Response API call response
         :rtype: requests.Response
         """
-        return self._call_api(method='DELETE', path=path, params= params)
+        return self._call_api(method='DELETE', path=path, params=params)
 
-    def get(self, path, params= None):
+    def get(self, path, params=None):
         """
         Helper function for HTTP GET commands
 
